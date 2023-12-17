@@ -20,17 +20,7 @@ double forward_propagation_unit(neural_layer *layer, neural_unit *unit) {
   int i;
   double sum = 0;
   for (i = 0; i < layer->number; i++) {
-    sum += layer->k[i][unit->index] * layer->units[i].output;
-  }
-  sum += unit->bias;
-  return (unit->output = sigmoid(sum));
-}
-
-double backward_propagation_unit(neural_layer *layer, neural_unit *unit) {
-  int i;
-  double sum = 0;
-  for (i = 0; i < layer->number; i++) {
-    sum += layer->k[i][unit->index] * layer->units[i].output;
+    sum += layer->w[i][unit->index] * layer->units[i].output;
   }
   sum += unit->bias;
   return (unit->output = sigmoid(sum));
@@ -56,7 +46,8 @@ neural_layer *init_layer(neural_layer *layer_p, int number) {
   int j;
   for (j = 0; j < max_layer_unit_number; j++) {
     for (i = 0; i < max_layer_unit_number; i++) {
-      layer_p->k[i][j] = rand_gause();
+      layer_p->w[i][j] = rand_gause();
+      layer_p->t[i][j] = 0;
     }
   }
   return layer_p;
@@ -91,4 +82,30 @@ neural_layer *traverse_layer(neural_layer *layer) {
     printf("layer not found\n");
   }
   return layer;
+}
+
+neural_unit *process_output_layer_w(neural_layer *previous_layer,
+                                    neural_unit *output_unit, double sample) {
+  int i;
+  double error = sample - output_unit->output;
+  for (i = 0; i < previous_layer->number; i++) {
+    previous_layer->t[i][0] = previous_layer->units[i].output *
+                              output_unit->output * (1 - output_unit->output) *
+                              error;
+	// printf("%d %lf\n",i,previous_layer->t[i][0]);
+  }
+  return output_unit;
+}
+
+void backward_propagation(neural_layer *current, neural_layer *before,
+                          neural_layer *after) {
+  int i, j, k;
+  for (i = 0; i < current->number; i++) {
+    for (j = 0; j < before->number; j++) {
+      for (k = 0; k < after->number; k++) {
+        before->t[j][i] += current->t[i][k] * current->w[i][k] * (1-current->units[i].output) * before->units[j].output;
+        // printf("%d %d %lf \n",j,i,before->t[j][i]);
+      }
+    }
+  }
 }
