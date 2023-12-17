@@ -4,17 +4,16 @@
 
 
 int main() {
-  int hiddens = hidden_layer_number;
-  int layer_number = 2 + hiddens;
+  int layer_number = 2 + hidden_layer_number;
   neural_layer layers[layer_number];
-  int number = INPUT;
-  init_layer(layers, number);
+  init_layer(layers, inputs);
   int i;
-  int units = hidden_layer_unit_number;
-  for (i=1;i<1+hiddens;i++){
-    init_layer(layers+i, units);
+  for (i=1;i<1+hidden_layer_number;i++){
+    init_layer(layers+i, hidden_layer_unit_number);
   }
   init_layer(layers+i, 1);
-  int row = 1 + INPUT;
-  double datas[3000][row];
+  for (i=0;i<layer_number;i++){
+    traverse_layer(layers+i);
+  }
+  double datas[3000][1+inputs];
 }

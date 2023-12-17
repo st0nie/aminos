@@ -33,6 +33,7 @@ neural_layer *init_layer(neural_layer *layer_p,int number){
     init_unit(p, i);
     p++;
   }
+  layer_p->number = number;
   int j;
   for(j=0;j<50;j++){
     for(i=0;i<50;i++){
@@ -56,4 +57,21 @@ double rand_gause() {
   double result;
   while((result = distribution(gen))<=0 || result >= 1);
   return result;
+}
+
+neural_layer *traverse_layer(neural_layer *layer) {
+  if (layer) {
+    int i;
+    printf("unit_numbers: %d\n",layer->number);
+    putchar('\n');
+    for (i = 0; i < layer->number; i++) {
+      printf("unit: %d\n",layer->units[i].index);
+      printf("bias: %lf\n",layer->units[i].bias);
+      printf("output: %lf\n",layer->units[i].output);
+      putchar('\n');
+    }
+  } else {
+    printf("layer not found\n");
+  }
+  return layer;
 }
