@@ -26,6 +26,16 @@ double forward_propagation_unit(neural_layer *layer, neural_unit *unit) {
   return (unit->output = sigmoid(sum));
 }
 
+double backward_propagation_unit(neural_layer *layer, neural_unit *unit) {
+  int i;
+  double sum = 0;
+  for (i = 0; i < layer->number; i++) {
+    sum += layer->k[i][unit->index] * layer->units[i].output;
+  }
+  sum += unit->bias;
+  return (unit->output = sigmoid(sum));
+}
+
 neural_layer *process_input(neural_layer *input_layer, double array[]) {
   int i;
   for (i = 0; i < input_layer->number; i++) {

@@ -11,11 +11,11 @@ int main() {
   for (i = 1; i < 1 + hidden_layer_number; i++) {
     init_layer(layers + i, hidden_layer_unit_number);
   }
-  init_layer(layers + i, 1);
+  init_layer(layers + i, outputs);
   // for (i = 0; i < layer_number; i++) {
   //   traverse_layer(layers + i);
   // }
-  double datas[3000][1 + inputs];
+  double datas[3000][outputs + inputs];
   get_inputs(datas);
   // for (i = 0; i < 2300; i++) {
   //   int j;

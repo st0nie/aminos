@@ -1,6 +1,6 @@
 #include "public.h"
 
-double **get_inputs(double datas[][inputs + 1]) {
+int get_inputs(double datas[][inputs + outputs]) {
   FILE *file = fopen("zhengqi_train.csv", "r");
   if (file == NULL) {
     printf("Error opening file\n");
@@ -12,15 +12,14 @@ double **get_inputs(double datas[][inputs + 1]) {
     char *token = strtok(line, ",");
 
     int i;
-    for (i = 0; i < 39; i++) {
-      double test = atof(token);
+    for (i = 0; i < inputs + outputs; i++) {
+      double token_double = atof(token);
       if (j - 1 >= 0)
-        datas[j - 1][i] = test;
+        datas[j - 1][i] = token_double;
       token = strtok(NULL, ",");
     }
     j++;
   }
-  int i;
   fclose(file);
   return 0;
 }
