@@ -1,5 +1,6 @@
 #ifndef NEURAL_H
 #define NEURAL_H
+#include "public.h"
 
 typedef struct neural_unit {
   double bias;
@@ -10,7 +11,7 @@ typedef struct neural_unit {
 typedef struct neural_layer {
   neural_unit* units;
   int number;
-  double k[50][50];
+  double k[max_layer_unit_number][max_layer_unit_number];
 } neural_layer;
 
 neural_layer *forward_propagation(neural_layer* layer, neural_layer *layer_next); //向前传递

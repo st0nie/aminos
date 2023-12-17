@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-const int hidden_layer_number=2;
-const int hidden_layer_unit_number=5;
+const int hidden_layer_number=4;
+const int max_layer_unit_number=50;
+const int hidden_layer_unit_number=20;
 const int inputs=38;
 
 #endif

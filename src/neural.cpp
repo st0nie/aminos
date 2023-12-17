@@ -1,4 +1,5 @@
 #include "neural.h"
+#include "public.h"
 #include <chrono>
 #include <math.h>
 #include <random>
@@ -43,8 +44,8 @@ neural_layer *init_layer(neural_layer *layer_p, int number) {
   }
   layer_p->number = number;
   int j;
-  for (j = 0; j < 50; j++) {
-    for (i = 0; i < 50; i++) {
+  for (j = 0; j < max_layer_unit_number; j++) {
+    for (i = 0; i < max_layer_unit_number; i++) {
       layer_p->k[i][j] = rand_gause();
     }
   }
