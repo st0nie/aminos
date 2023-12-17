@@ -2,6 +2,8 @@
 #define IO_H
 #include "public.h"
 
-int read_csv(long double[][ARRANGE_SIZE]);
+static int row = 1 + INPUT;
+
+double **get_inputs (double datas[][row]);
 
 #endif

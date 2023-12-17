@@ -1,25 +1,24 @@
 #ifndef NEURAL_H
 #define NEURAL_H
-#include "public.h"
-#include <math.h>
-#include "rand.h"
 
-NE_TYPE calculate(NE_TYPE x,NE_TYPE w,NE_TYPE b);
+typedef struct neural_unit {
+  double bias;
+  double output;
+  int index;
+} neural_unit;
 
-NE_TYPE sigmoid(NE_TYPE x);
+typedef struct neural_layer {
+  neural_unit* units;
+  int number;
+  double k[50][50];
+} neural_layer;
 
-NE_TYPE fitting(NE_TYPE x);
+double forward_propagation(neural_layer layer, neural_unit unit);
+double sigmoid(double num);
+neural_unit *init_unit(neural_unit *unit_p,int index);
+neural_layer *init_layer(neural_layer *layer_p,int number);
+double process_input(neural_layer* input_layer,double array[],int array_length);
 
-typedef struct NE_LINE_IN {
-  NE_TYPE ARR[NE_NUM*IN_NUM][2];
-} NE_LINE_IN;
-
-typedef struct NE_LINE_MID {
-  NE_TYPE ARR[NE_NUM*NE_NUM][2];
-} NE_LINE_MID;
-
-typedef struct NE_LINE_OUT {
-  NE_TYPE ARR[NE_NUM*OUT_NUM][2];
-} NE_LINE_OUT;
+double rand_gause();
 
 #endif
