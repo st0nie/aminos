@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "neural.h"
 #include "public.h"
-
+#include "io.h"
 
 int main() {
   int layer_number = 2 + hidden_layer_number;
@@ -16,4 +16,12 @@ int main() {
     traverse_layer(layers+i);
   }
   double datas[3000][1+inputs];
+  get_inputs(datas);
+  for (i=0;i<2300;i++){
+    int j;
+    for (j=0;j<1+inputs;j++){
+      printf("%lf ",datas[i][j]);
+    }
+    putchar('\n');
+  }
 }

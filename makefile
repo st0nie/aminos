@@ -1,7 +1,7 @@
 VPATH = src
 CXXFLAGS = -g
 
-SRCS = main.cpp neural.cpp
+SRCS = main.cpp neural.cpp io.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = aminos
 
