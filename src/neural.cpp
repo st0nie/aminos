@@ -2,6 +2,7 @@
 #include <math.h>
 #include <random>
 #include <chrono>
+#include <stdio.h>
 
 double sigmoid(double num) {
   return 1/(1+exp(-num));
