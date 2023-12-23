@@ -5,7 +5,13 @@
 #include <random>
 #include <stdio.h>
 
-double sigmoid(double num) { return 1 / (1 + exp(-num)); }
+double sigmoid(double num) {
+  return 1.0 / (1.0 + exp(-num));
+}
+
+double sigmoid_deriv(double num) {
+  return num * (1-num);
+}
 
 neural_layer *forward_propagation(neural_layer *layer,
                                   neural_layer *layer_next) {
@@ -20,7 +26,7 @@ double forward_propagation_unit(neural_layer *layer, neural_unit *unit) {
   int i;
   double sum = 0;
   for (i = 0; i < layer->number; i++) {
-    sum += layer->w[i][unit->index] * layer->units[i].output;
+    sum += layer->weight[i][unit->index] * layer->units[i].output;
   }
   sum += unit->bias;
   return (unit->output = sigmoid(sum));
@@ -46,8 +52,7 @@ neural_layer *init_layer(neural_layer *layer_p, int number) {
   int j;
   for (j = 0; j < max_layer_unit_number; j++) {
     for (i = 0; i < max_layer_unit_number; i++) {
-      layer_p->w[i][j] = rand_gause();
-      layer_p->t[i][j] = 0;
+      layer_p->weight[i][j] = rand_gause();
     }
   }
   return layer_p;
@@ -57,11 +62,12 @@ neural_unit *init_unit(neural_unit *unit_p, int index) {
   unit_p->bias = rand_gause();
   unit_p->index = index;
   unit_p->output = 0;
+  unit_p->gradient = 0;
   return unit_p;
 }
 
 double rand_gause() {
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  unsigned seed = 11;
   std::default_random_engine gen(seed);
   std::normal_distribution<double> distribution(0, 1);
   return distribution(gen);
@@ -76,6 +82,7 @@ neural_layer *traverse_layer(neural_layer *layer) {
       printf("unit: %d\n", layer->units[i].index);
       printf("bias: %lf\n", layer->units[i].bias);
       printf("output: %lf\n", layer->units[i].output);
+      printf("gradient: %lf\n", layer->units[i].gradient);
       putchar('\n');
     }
   } else {
@@ -84,28 +91,51 @@ neural_layer *traverse_layer(neural_layer *layer) {
   return layer;
 }
 
-neural_unit *process_output_layer_w(neural_layer *previous_layer,
-                                    neural_unit *output_unit, double sample) {
-  int i;
-  double error = sample - output_unit->output;
-  for (i = 0; i < previous_layer->number; i++) {
-    previous_layer->t[i][0] = previous_layer->units[i].output *
-                              output_unit->output * (1 - output_unit->output) *
-                              error;
-	// printf("%d %lf\n",i,previous_layer->t[i][0]);
+void soviet_w(neural_layer *layer){
+  int i,j;
+  for(i=0;i<max_layer_unit_number;i++){
+    for(j=0;j<max_layer_unit_number;j++){
+      layer->weight[i][j]-=learning_rate*layer->delta_weight[i][j];
+    }
   }
-  return output_unit;
+}
+void soviet_b(neural_layer *layer){
+  int i;
+  for(i=0;i<layer->number;i++){
+      layer->units[i].bias-=learning_rate*layer->delta_bias[i];
+  }
 }
 
-void backward_propagation(neural_layer *current, neural_layer *before,
-                          neural_layer *after) {
-  int i, j, k;
-  for (i = 0; i < current->number; i++) {
-    for (j = 0; j < before->number; j++) {
-      for (k = 0; k < after->number; k++) {
-        before->t[j][i] += current->t[i][k] * current->w[i][k] * (1-current->units[i].output) * before->units[j].output;
-        // printf("%d %d %lf \n",j,i,before->t[j][i]);
-      }
+int reset_layer(neural_layer *layer){
+  int i,j;
+  for(i=0;i<max_layer_unit_number;i++){
+    for(j=0;j<max_layer_unit_number;j++){
+      layer->delta_weight[i][j]=0;
+    }
+  }
+  for(i=0;i<layer->number;i++){
+    layer->units[i].output=0;
+    layer->units[i].gradient=0;
+    layer->delta_bias[i]=0;
+  }
+  return 0;
+}
+
+double loss(double target, double output) {
+  return 0.5 * (output - target) * (output - target);
+}
+
+void backward_propagation(neural_layer *current, neural_layer *before) {
+  int i,j;
+  for (i=0;i<before->number;i++){
+    for (j=0;j<current->number;j++){
+      before->units[i].gradient += current->units[j].gradient * before->weight[i][j] * sigmoid_deriv(before->units[i].output);
+    }
+  }
+  for (i=0;i<before->number;i++){
+    for (j=0;j<current->number;j++){
+      before->delta_weight[i][j] += current->units[j].gradient * before->units[i].output;
+      before->delta_bias[i] += current->units[j].gradient;
     }
   }
 }

@@ -15,24 +15,27 @@ int main() {
   init_layer(layers + i, outputs);
   double datas[3000][outputs + inputs];
   get_inputs(datas);
-  int j = 0;
-  datas[j][inputs] = sigmoid(datas[j][inputs]);
-  process_input(layers, datas[j]);
-  for (i = 0; i < layer_number - 1; i++) {
-    forward_propagation(layers + i, layers + i + 1);
-  }
-  process_output_layer_w(layers + i - 1, &(layers + i)->units[0],
-                         datas[j][inputs]);
-  for (i = layer_number - 2; i >= 1; i--) {
-    backward_propagation(layers + i, layers + i - 1, layers + i + 1);
-  }
-  for (i=0;i<layer_number-1;i++){
-    for (j=0;j<50;j++){
-      for (int k=0;k<50;k++){
-        if ((layers+i)->t[j][k]!=0)
-          printf("%d %d %d %lf \n",i,j,k,(layers+i)->t[j][k]);
-      }
+  int j,k;
+  for (j = 0; j < 2300; j++) {
+    neural_layer *output_layer = layers + layer_number - 1;
+    for (i = 0; i < layer_number - 1; i++) {
+      reset_layer(layers + i);
     }
-    putchar('\n');
+    process_input(layers, datas[j]);
+    for (i = 0; i < layer_number - 1; i++) {
+      forward_propagation(layers + i, layers + i + 1);
+    }
+    double target = datas[j][38];
+    double output = output_layer->units->output;
+    double output_gradient = (output - target) * sigmoid_deriv(output);
+    output_layer->units->gradient = output_gradient;
+    for (i = layer_number - 1; i >= 1; i--) {
+      backward_propagation(layers + i, layers + i - 1);
+    }
+    for (i = 0; i < layer_number - 1; i++) {
+      soviet_w(layers + i);
+      soviet_b(layers + i);
+    }
+    printf("%lf %lf %lf\n",loss(target, output),target,output);
   }
 }
