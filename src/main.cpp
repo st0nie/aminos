@@ -16,7 +16,7 @@ int main() {
   init_layer(layers + i, outputs);
   double datas[3000][outputs + inputs];
   get_inputs(datas);
-  standard_inputs(datas);
+  // standard_inputs(datas);
   int j, k;
   for (k = 0; k < 30; k++) {
     double sum = 0;
