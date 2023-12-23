@@ -2,6 +2,7 @@
 #define IO_H
 #include "public.h"
 
-int get_inputs(double datas[][inputs + outputs]);
+int get_inputs(double datas[train_size][inputs + outputs]);
+int standard_inputs(double datas[train_size][inputs + outputs]);
 
 #endif

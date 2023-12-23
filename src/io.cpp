@@ -1,6 +1,6 @@
 #include "public.h"
 
-int get_inputs(double datas[][inputs + outputs]) {
+int get_inputs(double datas[train_size][inputs + outputs]) {
   FILE *file = fopen("zhengqi_train.csv", "r");
   if (file == NULL) {
     printf("Error opening file\n");
@@ -21,5 +21,24 @@ int get_inputs(double datas[][inputs + outputs]) {
     j++;
   }
   fclose(file);
+  return 0;
+}
+int standard_inputs(double datas[train_size][inputs + outputs]) {
+  int i, j;
+  for (j = 0; j < inputs + outputs; j++) {
+    double sum = 0;
+    for (i = 0; i < train_size; i++) {
+      sum += datas[i][j];
+    }
+    double mean = sum / train_size;
+    double variance = 0;
+    for (i = 0; i < train_size; i++) {
+      variance += pow(datas[i][j] - mean, 2);
+    }
+    double std = sqrt(variance / train_size);
+    for (i = 0; i < train_size; i++) {
+      datas[i][j] = (datas[i][j] - mean) / std;
+    }
+  }
   return 0;
 }

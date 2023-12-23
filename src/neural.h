@@ -29,7 +29,7 @@ double
 forward_propagation_unit_output(neural_layer *layer,
                                 neural_unit *unit); // 向前传递(单元)_output
 
-double sigmoid(double num);
+double activation(double num);
 neural_unit *init_unit(neural_unit *unit_p, int index); // 初始化神经元
 neural_layer *init_layer(neural_layer *layer_p, int number); // 初始化层
 neural_layer *process_input(neural_layer *input_layer,
@@ -51,6 +51,6 @@ void soviet_b(neural_layer *layer); // 修正b
 
 int reset_layer(neural_layer *layer); // 清理层
 
-double sigmoid_deriv(double num); // relu 求导
+double activation_deriv(double num); // relu 求导
 double loss(double target,double output);
 #endif
