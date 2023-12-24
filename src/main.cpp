@@ -2,6 +2,7 @@
 #include "neural.h"
 #include "public.h"
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <stdio.h>
 
@@ -18,7 +19,7 @@ int main() {
   get_inputs(datas);
   // standard_inputs(datas);
   int j, k;
-  for (k = 0; k < 30; k++) {
+  for (k = 0; k < epoch; k++) {
     double sum = 0;
     int n = 0;
     for (j = 0; j < train_size; j++) {
@@ -47,6 +48,9 @@ int main() {
       printf("loss: %lf target: %lf output: %lf\n", L, target, output);
       if (n == 50) {
         printf("avg_loss: %lf \n\n", sum / n);
+		if ((sum / n) < 0.09){
+			return 0;
+		} 
         n = 0;
         sum = 0;
       }

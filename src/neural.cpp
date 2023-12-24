@@ -7,7 +7,7 @@
 
 double activation(double num) { return atan(num); }
 
-double activation_deriv(double num) { return 1.0 / (1 + pow(num, 2)); }
+double activation_deriv(double num) { return 1.0 / (1 + pow(tan(num), 2)); }
 
 neural_layer *forward_propagation(neural_layer *layer,
                                   neural_layer *layer_next) {
