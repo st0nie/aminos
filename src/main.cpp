@@ -15,7 +15,7 @@ int main() {
     init_layer(layers + i, hidden_layer_unit_number);
   }
   init_layer(layers + i, outputs);
-  double datas[3000][outputs + inputs];
+  double datas[train_size][outputs + inputs];
   get_inputs(datas);
   // standard_inputs(datas);
   int j, k;

@@ -63,7 +63,6 @@ neural_unit *init_unit(neural_unit *unit_p, int index) {
 }
 
 double rand_gause() {
-  unsigned seed = 11;
   std::default_random_engine gen(seed);
   std::normal_distribution<double> distribution(0, 1);
   return distribution(gen);
